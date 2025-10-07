@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CVs | Talent Acquisition Suite</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+
+        .upload-container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .upload-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            background: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.75rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 0;
+        }
+
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 4rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            background: #fafafa;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.05);
+            transform: scale(1.02);
+        }
+
+        .upload-area.active {
+            border-color: var(--success-color);
+            background: rgba(76, 201, 240, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            transform: translateY(-5px);
+        }
+
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .btn-upload {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 0.9rem 2.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.4);
+            color: white;
+        }
+
+        .btn-upload:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-upload::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+        }
+
+        .btn-upload:hover::before {
+            left: 100%;
+        }
+
+        .file-list {
+            margin-top: 2rem;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .file-icon {
+            margin-right: 1rem;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .file-name {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+
+        .file-size {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-right: 1.5rem;
+        }
+
+        .file-remove {
+            color: var(--error-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-remove:hover {
+            color: #dc2626;
+            transform: scale(1.2);
+        }
+
+        .alert-message {
+            border-left: 5px solid var(--success-color);
+            background: rgba(76, 201, 240, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .back-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .back-link:hover {
+            color: var(--secondary-color);
+            transform: translateX(-5px);
+        }
+
+        .upload-results {
+            margin-top: 2.5rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .upload-results h4 {
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #f1f1f1;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .result-item.success {
+            background: rgba(76, 201, 240, 0.15);
+        }
+
+        .result-item.error {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .result-icon {
+            font-size: 1.6rem;
+            margin-right: 1.2rem;
+        }
+
+        .success .result-icon {
+            color: var(--success-color);
+        }
+
+        .error .result-icon {
+            color: var(--error-color);
+        }
+
+        .result-details {
+            flex-grow: 1;
+        }
+
+        .result-name {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .result-message {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .success .result-message {
+            color: var(--success-color);
+        }
+
+        .error .result-message {
+            color: var(--error-color);
+        }
+
+        /* Custom Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .custom-toast {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-bottom: 1rem;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .custom-toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-header {
+            border-bottom: none;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .toast-body {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: rgba(67, 97, 238, 0.2);
+            width: 100%;
+        }
+
+        .toast-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 0.1s linear;
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+        }
+
+        .toast-success .toast-icon {
+            color: var(--success-color);
+        }
+
+        .toast-warning .toast-icon {
+            color: var(--warning-color);
+        }
+
+        .toast-error .toast-icon {
+            color: var(--error-color);
+        }
+
+        .toast-info .toast-icon {
+            color: var(--primary-color);
+        }
+
+        /* Progress Bar for Upload */
+        .upload-progress-container {
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .upload-progress {
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(67, 97, 238, 0.1);
+            overflow: hidden;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .upload-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .upload-area {
+                padding: 2.5rem 1rem;
+            }
+            .card-body {
+                padding: 1.5rem;
+            }
+            .btn-upload {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            .toast-container {
+                max-width: 280px;
+                right: 10px;
+                top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="container py-5">
+        <div class="upload-container" data-aos="fade-up">
+            <div class="upload-card" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-cloud-upload-alt me-2"></i> Upload Candidate CVs</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" id="uploadForm">
+                        {% csrf_token %}
+                        <div class="upload-area" id="dropArea" data-aos="fade-up" data-aos-delay="200">
+                            <div class="upload-icon">
+                                <i class="fas fa-file-upload"></i>
+                            </div>
+                            <h5>Drag & Drop CV Files Here</h5>
+                            <p class="text-muted">or click to browse files (PDF, DOCX, TXT, JPG, PNG, JPEG) - Max 5MB per file</p>
+                            <input type="file" name="cv_files" id="fileInput" class="file-input" multiple accept=".pdf,.docx,.txt,.jpg,.jpeg,.png">
+                        </div>
+
+                        <div class="file-list" id="fileList" data-aos="fade-up" data-aos-delay="300">
+                            <p class="text-muted text-center">No files selected (Max 5MB per file)</p>
+                        </div>
+
+                        <!-- Upload Progress -->
+                        <div class="upload-progress-container" id="uploadProgressContainer">
+                            <div class="upload-progress">
+                                <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                            </div>
+                            <div class="upload-status">
+                                <span id="uploadStatusText">Preparing upload...</span>
+                                <span id="uploadPercentage">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a href="{% url 'home' %}" class="back-link" data-aos="fade-right" data-aos-delay="400">
+                                <i class="fas fa-arrow-left me-2"></i> Back to Home
+                            </a>
+                            <button type="submit" class="btn-upload" id="uploadBtn" disabled title="Files must be PDF, DOCX, TXT, JPG, PNG, or JPEG and under 5MB" data-aos="fade-left" data-aos-delay="400">
+                                <i class="fas fa-upload me-2"></i> Upload Selected Files
+                            </button>
+                        </div>
+                    </form>
+
+                    {% if message %}
+                    <div class="alert alert-message alert-success mt-4" data-aos="fade-up" data-aos-delay="500">
+                        <i class="fas fa-check-circle me-2"></i> {{ message }}
+                    </div>
+                    {% endif %}
+
+                    {% if upload_results %}
+                    <div class="upload-results mt-4" data-aos="fade-up" data-aos-delay="600">
+                        <h4><i class="fas fa-clipboard-check me-2"></i>Upload Results</h4>
+                        <div class="results-list">
+                            {% for result in upload_results %}
+                            <div class="result-item {% if result.success %}success{% else %}error{% endif %}" data-aos="fade-up" data-aos-delay="{{ forloop.counter }}">
+                                <div class="result-icon">
+                                    {% if result.success %}
+                                    <i class="fas fa-check-circle"></i>
+                                    {% else %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="result-details">
+                                    <div class="result-name">{{ result.name }}</div>
+                                    <div class="result-message">
+                                        {% if result.success %}
+                                        {{ result.message }}
+                                        {% else %}
+                                        Failed: {{ result.error }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+        });
+
+        // Toast Notification System
+        function showToast(type, title, message, duration = 5000) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+            
+            let iconClass = 'fa-info-circle';
+            let toastClass = 'toast-info';
+            
+            switch(type) {
+                case 'success':
+                    iconClass = 'fa-check-circle';
+                    toastClass = 'toast-success';
+                    break;
+                case 'warning':
+                    iconClass = 'fa-exclamation-triangle';
+                    toastClass = 'toast-warning';
+                    break;
+                case 'error':
+                    iconClass = 'fa-times-circle';
+                    toastClass = 'toast-error';
+                    break;
+            }
+            
+            const toastHTML = `
+                <div class="custom-toast ${toastClass}" id="${toastId}" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">
+                            <i class="fas ${iconClass} toast-icon"></i>
+                            ${title}
+                        </strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                        <div class="toast-progress">
+                            <div class="toast-progress-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            const toastElement = document.getElementById(toastId);
+            
+            // Show the toast
+            setTimeout(() => {
+                toastElement.classList.add('show');
+                
+                // Start progress bar animation
+                const progressBar = toastElement.querySelector('.toast-progress-bar');
+                progressBar.style.width = '0%';
+                progressBar.style.transition = `width ${duration}ms linear`;
+                setTimeout(() => progressBar.style.width = '0%', 50);
+                
+                // Auto dismiss after duration
+                setTimeout(() => {
+                    toastElement.classList.remove('show');
+                    setTimeout(() => toastElement.remove(), 400);
+                }, duration);
+            }, 50);
+            
+            // Close button functionality
+            toastElement.querySelector('.btn-close').addEventListener('click', () => {
+                toastElement.classList.remove('show');
+                setTimeout(() => toastElement.remove(), 400);
+            });
+            
+            return toastId;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadProgressContainer = document.getElementById('uploadProgressContainer');
+            const uploadProgressBar = document.getElementById('uploadProgressBar');
+            const uploadStatusText = document.getElementById('uploadStatusText');
+            const uploadPercentage = document.getElementById('uploadPercentage');
+            let files = [];
+
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            // Highlight drop area
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.classList.add('active');
+            }
+
+            function unhighlight() {
+                dropArea.classList.remove('active');
+            }
+
+            // Handle dropped files
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const newFiles = dt.files;
+                handleFiles(newFiles);
+            }
+
+            // Handle selected files
+            fileInput.addEventListener('change', function () {
+                handleFiles(this.files);
+            });
+
+            function handleFiles(newFiles) {
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                files = Array.from(newFiles).filter(file => {
+                    if (file.size > maxSize) {
+                        showToast('error', 'File Too Large', `"${file.name}" exceeds the 5MB size limit and was not added.`);
+                        return false;
+                    }
+                    return true;
+                });
+                
+                if (files.length > 0) {
+                    showToast('success', 'Files Added', `Added ${files.length} file(s) for upload`);
+                }
+                
+                updateFileList();
+                updateUploadButton();
+            }
+
+            function updateFileList() {
+                fileList.innerHTML = '';
+
+                if (files.length === 0) {
+                    fileList.innerHTML = '<p class="text-muted text-center">No files selected (Max 5MB per file)</p>';
+                    return;
+                }
+
+                files.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+
+                    const fileType = file.name.split('.').pop().toLowerCase();
+                    let iconClass = 'fa-file';
+                    if (fileType === 'pdf') iconClass = 'fa-file-pdf';
+                    if (fileType === 'docx') iconClass = 'fa-file-word';
+                    if (fileType === 'txt') iconClass = 'fa-file-alt';
+                    if (fileType === 'jpg' || fileType === 'jpeg') iconClass = 'fa-file-image';
+                    if (fileType === 'png') iconClass = 'fa-file-image';
+
+                    fileItem.innerHTML = `
+                        <div class="file-icon">
+                            <i class="fas ${iconClass}"></i>
+                        </div>
+                        <div class="file-name" title="${file.name}">
+                            ${file.name}
+                        </div>
+                        <div class="file-size">
+                            ${formatFileSize(file.size)}
+                        </div>
+                        <div class="file-remove" onclick="removeFile(${index})">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+
+            function updateUploadButton() {
+                uploadBtn.disabled = files.length === 0;
+            }
+
+            window.removeFile = function (index) {
+                const removedFile = files[index];
+                files.splice(index, 1);
+                updateFileList();
+                updateUploadButton();
+                showToast('warning', 'File Removed', `"${removedFile.name}" was removed from upload list`);
+            };
+
+            // Form submission feedback with progress simulation
+            const uploadForm = document.getElementById('uploadForm');
+            uploadForm.addEventListener('submit', function (e) {
+                if (files.length === 0) {
+                    showToast('error', 'No Files', 'Please select at least one file to upload');
+                    e.preventDefault();
+                    return;
+                }
+                
+                // Show upload progress
+                uploadProgressContainer.style.display = 'block';
+                uploadStatusText.textContent = 'Uploading files...';
+                uploadProgressBar.style.width = '0%';
+                uploadPercentage.textContent = '0%';
+                
+                // Disable upload button
+                uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Uploading...';
+                uploadBtn.disabled = true;
+                
+                // Simulate upload progress (replace with actual upload progress if using AJAX)
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(progressInterval);
+                        uploadStatusText.textContent = 'Processing files...';
+                        
+                        // Final completion after a delay
+                        setTimeout(() => {
+                            uploadProgressBar.style.width = '100%';
+                            uploadPercentage.textContent = '100%';
+                            showToast('success', 'Upload Complete', 'All files have been uploaded successfully');
+                        }, 500);
+                    } else {
+                        uploadProgressBar.style.width = `${progress}%`;
+                        uploadPercentage.textContent = `${Math.round(progress)}%`;
+                    }
+                }, 200);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+django 
+python-docx 
+PyPDF2
+pdfminer.six
+  spacy
+  #pytesseract
+  pdf2image
+  easyocr
+  python-dateutil
+  djangorestframework
+  django-cors-headers
