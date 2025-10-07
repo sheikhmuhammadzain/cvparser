@@ -135,7 +135,6 @@ target/
 __pycache__/
 local_settings.py
 
-.env
 db.sqlite3
 .installed.cfg
 *.egg
@@ -176,7 +175,6 @@ target/
 __pycache__/
 local_settings.py
 
-.env
 db.sqlite3
 *.xml
 *.iml
@@ -185,3 +183,5 @@ db.sqlite3
 
 # Ignore media uploads
 /media/
+config.bat
+node_modules

@@ -71,6 +71,108 @@ Open your browser and go to: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
+### Frontend Setup
+
+The frontend is a modern React application built with **Vite**, **TypeScript**, **TailwindCSS**, and **shadcn/ui** components.
+
+#### Prerequisites
+Ensure the following are installed on your system:
+
+- Node.js 18+ (or Bun)
+- npm, yarn, or bun package manager
+
+#### Steps
+
+1. **Navigate to the Client Directory:**
+```bash
+cd client
+```
+
+2. **Install Dependencies:**
+
+Using npm:
+```bash
+npm install
+```
+
+Using yarn:
+```bash
+yarn install
+```
+
+Using bun:
+```bash
+bun install
+```
+
+3. **Configure Environment Variables:**
+
+Create a `.env.development` file in the `client` folder (if not present) with:
+```env
+VITE_API_URL=http://127.0.0.1:8000
+```
+
+For production, create a `.env.production` file with your production API URL.
+
+4. **Start the Development Server:**
+
+Using npm:
+```bash
+npm run dev
+```
+
+Using yarn:
+```bash
+yarn dev
+```
+
+Using bun:
+```bash
+bun run dev
+```
+
+5. **Access the Frontend:**
+Open your browser and go to: [http://localhost:5173/](http://localhost:5173/)
+
+6. **Build for Production:**
+
+Using npm:
+```bash
+npm run build
+```
+
+Using yarn:
+```bash
+yarn build
+```
+
+Using bun:
+```bash
+bun run build
+```
+
+The production build will be generated in the `dist/` folder.
+
+7. **Preview Production Build:**
+```bash
+npm run preview
+```
+
+#### Frontend Tech Stack
+- **React 18** - UI library
+- **Vite** - Fast build tool and dev server
+- **TypeScript** - Type-safe JavaScript
+- **TailwindCSS** - Utility-first CSS framework
+- **shadcn/ui** - Reusable component library
+- **React Router** - Client-side routing
+- **TanStack Query** - Data fetching and caching
+- **React Hook Form** - Form management
+- **Zod** - Schema validation
+- **Lucide React** - Icon library
+- **Recharts** - Data visualization
+
+---
+
 ### Usage
 
 #### Uploading Resumes
