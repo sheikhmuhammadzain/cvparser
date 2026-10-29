@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded CVs | TalentFinder Pro</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #5e60ce;
+            --secondary-color: #4ea8de;
+            --accent-color: #48cae4;
+            --light-color: #f9fbfc;
+            --dark-color: #1e1e2f;
+            --success-color: #06d6a0;
+            --pending-color: #f4a261;
+            --error-color: #ef233c;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--light-color) 0%, #e0e6ef 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+
+        .cv-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        .cv-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            background: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cv-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-weight: 400;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        .cv-item {
+            display: flex;
+            align-items: center;
+            padding: 1.2rem;
+            border-bottom: 1px solid #e9ecef;
+            background: white;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .cv-item:hover {
+            background: rgba(94, 96, 206, 0.05);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .cv-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .file-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-right: 1.5rem;
+            min-width: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .cv-item:hover .file-icon {
+            transform: scale(1.15);
+        }
+
+        .file-details {
+            flex-grow: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-meta {
+            color: #6c757d;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .file-meta span {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-meta i {
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .status-badge {
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .status-processed {
+            background-color: rgba(6, 214, 160, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background-color: rgba(244, 162, 97, 0.2);
+            color: var(--pending-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .btn-view,
+        .btn-download {
+            padding: 0.5rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-view {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-view:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 96, 206, 0.3);
+        }
+
+        .btn-download {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-download:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 96, 206, 0.3);
+        }
+
+        .no-cvs {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .no-cvs-icon {
+            font-size: 3rem;
+            color: #adb5bd;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .no-cvs:hover .no-cvs-icon {
+            transform: scale(1.1);
+        }
+
+        .no-cvs h3 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link:hover {
+            color: white;
+            background: var(--primary-color);
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(94, 96, 206, 0.3);
+        }
+
+        .back-link i {
+            margin-right: 0.75rem;
+        }
+
+        .pagination {
+            margin-top: 2.5rem;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .page-link {
+            color: var(--primary-color);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover {
+            background: rgba(94, 96, 206, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .page-item.active .page-link {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .cv-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+
+            .action-buttons {
+                margin-left: 0;
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .file-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .back-link {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container">
+        {% if message %}
+        <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive"
+            aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+        {% endif %}
+        {% if error %}
+        <div class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive"
+            aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ error }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="cv-container">
+        <div class="cv-card" data-aos="zoom-in">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-file-archive me-2"></i> Uploaded CVs</h2>
+                <p class="card-subtitle">Browse and manage all uploaded CVs</p>
+            </div>
+            <div class="card-body">
+                {% if page_obj %}
+                <div class="cv-list">
+                    {% for cv in page_obj %}
+                    <div class="cv-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}">
+                        <div class="file-icon">
+                            {% if cv.file.name|lower|slice:"-4:" == ".pdf" %}
+                            <i class="fas fa-file-pdf"></i>
+                            {% elif cv.file.name|lower|slice:"-5:" == ".docx" %}
+                            <i class="fas fa-file-word"></i>
+                            {% else %}
+                            <i class="fas fa-file-alt"></i>
+                            {% endif %}
+                        </div>
+                        <div class="file-details">
+                            <h5 class="file-name">
+                                {{ cv.file.name|slice:"4:" }}
+                                <span
+                                    class="status-badge {% if cv.status == 'Processed' %}status-processed{% else %}status-pending{% endif %}">
+                                    {{ cv.status }}
+                                </span>
+                            </h5>
+                            <div class="file-meta">
+                                <span>
+                                    <i class="fas fa-calendar-alt"></i>
+                                    {{ cv.uploaded_at|date:"M d, Y" }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-clock"></i>
+                                    {{ cv.uploaded_at|time:"H:i" }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="{{ cv.file.url }}" target="_blank" class="btn btn-view">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{{ cv.file.url }}" download class="btn btn-download">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <nav aria-label="CV list pagination" data-aos="fade-up" data-aos-delay="300">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+                {% else %}
+                <div class="no-cvs" data-aos="fade-up">
+                    <div class="no-cvs-icon">
+                        <i class="fas fa-file-circle-exclamation"></i>
+                    </div>
+                    <h3>No CVs Uploaded Yet</h3>
+                    <p class="text-muted">Upload your first CV to get started with the screening process.</p>
+                </div>
+                {% endif %}
+                <!-- Back to Home Button -->
+                <div class="text-center">
+                    <a href="{% url 'home' %}" class="back-link" data-aos="fade-right" data-aos-delay="400">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize toasts
+            const toasts = document.querySelectorAll('.toast');
+            toasts.forEach(toast => {
+                new bootstrap.Toast(toast).show();
+            });
+
+            // Status badge hover effect
+            const statusBadges = document.querySelectorAll('.status-badge');
+            statusBadges.forEach(badge => {
+                badge.addEventListener('mouseenter', () => {
+                    badge.style.transform = 'scale(1.1)';
+                });
+                badge.addEventListener('mouseleave', () => {
+                    badge.style.transform = 'scale(1)';
+                });
+            });
+
+            // Show toast if page_obj exists
+            {% if page_obj %}
+            showToast('success', 'CV list loaded successfully');
+            {% endif %}
+        });
+
+        // Toast notification function
+        function showToast(type, message) {
+            const toastContainer = document.querySelector('.toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : 'success'} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.setAttribute('data-bs-autohide', 'true');
+            toast.setAttribute('data-bs-delay', '3000');
+            toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+            toastContainer.appendChild(toast);
+            new bootstrap.Toast(toast).show();
+        }
+    </script>
+
+</body>
+
+</html>
